@@ -159,7 +159,7 @@ pub fn p1(s: &str) -> String {
     hands.sort();
     hands
         .into_iter()
-        .map(|e| e.2) //Hands no longer necessary
+        .map(|e| e.2) //Hands, scores no longer necessary
         .enumerate()
         .fold(0, |acc, (i, bet)| acc + ((i as u32 + 1) * bet))
         .to_string()
@@ -179,11 +179,13 @@ pub fn p2(s: &str) -> String {
 
     //Annoying custom sort for p2
     hands.sort_by(|a, b| {
+        //Sort by score unless equal
         let ord = a.0.cmp(&b.0);
         if !ord.is_eq() {
             return ord;
         }
 
+        //Otherwise sort by cards
         for (a, b) in a.1.cards.iter().zip(b.1.cards.iter()) {
             let ord = a.idx2().cmp(&b.idx2());
             if ord != std::cmp::Ordering::Equal {
