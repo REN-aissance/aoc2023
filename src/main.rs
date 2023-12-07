@@ -1,4 +1,13 @@
+#![feature(let_chains)]
+#![allow(dead_code)]
+#![feature(variant_count)]
 mod day1;
+mod day2;
+mod day3;
+mod day4;
+mod day5;
+mod day6;
+mod day7;
 
 use std::fs;
 
@@ -12,18 +21,18 @@ impl Solutions {
         Solutions(&[
             (day1::p1, "inputs/1.txt"),
             (day1::p2, "inputs/1.txt"),
-            // (day2::p1, "inputs/2.txt"),
-            // (day2::p2, "inputs/2.txt"),
-            // (day3::p1, "inputs/3.txt"),
-            // (day3::p2, "inputs/3.txt"),
-            // (day4::p1, "inputs/4.txt"),
-            // (day4::p2, "inputs/4.txt"),
-            // (day5::p1, "inputs/5.txt"),
-            // (day5::p2, "inputs/5.txt"),
-            // (day6::p1, "inputs/6.txt"),
-            // (day6::p2, "inputs/6.txt"),
-            // (day7::p1, "inputs/7.txt"),
-            // (day7::p2, "inputs/7.txt"),
+            (day2::p1, "inputs/2.txt"),
+            (day2::p2, "inputs/2.txt"),
+            (day3::p1, "inputs/3.txt"),
+            (day3::p2, "inputs/3.txt"),
+            (day4::p1, "inputs/4.txt"),
+            (day4::p2, "inputs/4.txt"),
+            (day5::p1, "inputs/5.txt"),
+            (day5::p2, "inputs/5.txt"),
+            (day6::p1, "inputs/6.txt"),
+            (day6::p2, "inputs/6.txt"),
+            (day7::p1, "inputs/7.txt"),
+            (day7::p2, "inputs/7.txt"),
             // (day8::p1, "inputs/8.txt"),
             // (day8::p2, "inputs/8.txt"),
             // (day9::p1, "inputs/9.txt"),
@@ -69,7 +78,7 @@ impl Solutions {
         }
     }
     pub fn get_input(path: &str) -> String {
-        fs::read_to_string(path).unwrap()
+        fs::read_to_string(path).expect("failed to read input file")
     }
 }
 
