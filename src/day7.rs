@@ -56,18 +56,14 @@ impl Card {
 
 #[derive(Eq, PartialEq, Debug, Clone, Copy, PartialOrd, Ord)]
 struct Hand {
-    score: Score,
     cards: [Card; 5],
 }
 impl Hand {
     pub fn new(cards: [Card; 5]) -> Hand {
-        Hand {
-            cards,
-            score: Score::default(),
-        }
+        Hand { cards }
     }
 
-    fn with_score_p1(mut self) -> Hand {
+    fn score_p1(&self) -> Score {
         let mut counts = [0; variant_count::<Card>()];
         self.cards.iter().for_each(|c| counts[c.idx1()] += 1);
         let mut count_counts = [0; HAND_SIZE];
@@ -75,11 +71,10 @@ impl Hand {
             .into_iter()
             .filter(|&i| i != 0)
             .for_each(|i| count_counts[i - 1] += 1); //fix indexing
-        self.score = Hand::score_from_counts(count_counts);
-        self
+        Hand::score_from_counts(count_counts)
     }
 
-    fn with_score_p2(mut self) -> Hand {
+    fn score_p2(&self) -> Score {
         let mut counts = [0; variant_count::<Card>()];
         let mut jacks = 0;
         self.cards.iter().for_each(|c| counts[c.idx2()] += 1);
@@ -104,9 +99,7 @@ impl Hand {
                 }
             }
         }
-
-        self.score = Hand::score_from_counts(count_counts);
-        self
+        Hand::score_from_counts(count_counts)
     }
 
     fn score_from_counts(counts: [usize; 5]) -> Score {
@@ -141,10 +134,8 @@ impl FromIterator<Card> for Hand {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Eq, Ord, Debug, Clone, Copy, Default)]
+#[derive(PartialEq, PartialOrd, Eq, Ord, Debug, Clone, Copy)]
 enum Score {
-    #[default]
-    None,
     HighCard,
     OnePair,
     TwoPair,
@@ -159,19 +150,16 @@ pub fn p1(s: &str) -> String {
         .lines()
         .map(|line| {
             let (hand, bet) = line.split_once(' ').unwrap();
-            let hand = hand
-                .chars()
-                .map(Card::from)
-                .collect::<Hand>()
-                .with_score_p1();
+            let hand = hand.chars().map(Card::from).collect::<Hand>();
+            let score = hand.score_p1();
             let bet = bet.parse::<u32>().unwrap();
-            (hand, bet)
+            (score, hand, bet)
         })
         .collect::<Vec<_>>();
     hands.sort();
     hands
         .into_iter()
-        .map(|e| e.1) //Hands no longer necessary
+        .map(|e| e.2) //Hands no longer necessary
         .enumerate()
         .fold(0, |acc, (i, bet)| acc + ((i as u32 + 1) * bet))
         .to_string()
@@ -182,24 +170,21 @@ pub fn p2(s: &str) -> String {
         .lines()
         .map(|line| {
             let (hand, bet) = line.split_once(' ').unwrap();
-            let hand = hand
-                .chars()
-                .map(Card::from)
-                .collect::<Hand>()
-                .with_score_p2();
+            let hand = hand.chars().map(Card::from).collect::<Hand>();
+            let score = hand.score_p2();
             let bet = bet.parse::<u32>().unwrap();
-            (hand, bet)
+            (score, hand, bet)
         })
         .collect::<Vec<_>>();
 
     //Annoying custom sort for p2
     hands.sort_by(|a, b| {
-        let ord = a.0.score.cmp(&b.0.score);
+        let ord = a.0.cmp(&b.0);
         if !ord.is_eq() {
             return ord;
         }
 
-        for (a, b) in a.0.cards.iter().zip(b.0.cards.iter()) {
+        for (a, b) in a.1.cards.iter().zip(b.1.cards.iter()) {
             let ord = a.idx2().cmp(&b.idx2());
             if ord != std::cmp::Ordering::Equal {
                 return ord;
@@ -209,7 +194,7 @@ pub fn p2(s: &str) -> String {
     });
     hands
         .into_iter()
-        .map(|e| e.1) //Hands no longer necessary
+        .map(|e| e.2) //Hands no longer necessary
         .enumerate()
         .fold(0, |acc, (i, bet)| acc + ((i as u32 + 1) * bet))
         .to_string()
