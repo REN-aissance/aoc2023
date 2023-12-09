@@ -3,7 +3,6 @@ use core::mem::variant_count;
 const HAND_SIZE: usize = 5;
 
 #[derive(PartialEq, PartialOrd, Eq, Ord, Debug, Clone, Copy)]
-#[repr(usize)]
 enum Card {
     _2,
     _3,
@@ -55,17 +54,11 @@ impl Card {
 }
 
 #[derive(Eq, PartialEq, Debug, Clone, Copy, PartialOrd, Ord)]
-struct Hand {
-    cards: [Card; 5],
-}
+struct Hand([Card; HAND_SIZE]);
 impl Hand {
-    pub fn new(cards: [Card; 5]) -> Hand {
-        Hand { cards }
-    }
-
     fn score_p1(&self) -> Score {
         let mut counts = [0; variant_count::<Card>()];
-        self.cards.iter().for_each(|c| counts[c.idx1()] += 1);
+        self.0.iter().for_each(|c| counts[c.idx1()] += 1);
         let mut count_counts = [0; HAND_SIZE];
         counts
             .into_iter()
@@ -77,7 +70,7 @@ impl Hand {
     fn score_p2(&self) -> Score {
         let mut counts = [0; variant_count::<Card>()];
         let mut jacks = 0;
-        self.cards.iter().for_each(|c| counts[c.idx2()] += 1);
+        self.0.iter().for_each(|c| counts[c.idx2()] += 1);
         //Don't extract jacks if there are 5, thus ignoring the jack rule
         if counts[0] != 5 {
             std::mem::swap(&mut counts[0], &mut jacks);
@@ -121,15 +114,15 @@ impl Hand {
     }
 }
 
-impl FromIterator<Card> for Hand {
-    fn from_iter<T: IntoIterator<Item = Card>>(iter: T) -> Self {
+impl FromIterator<char> for Hand {
+    fn from_iter<T: IntoIterator<Item = char>>(iter: T) -> Self {
         let mut iter = iter.into_iter();
-        Hand::new([
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
+        Hand([
+            iter.next().unwrap().into(),
+            iter.next().unwrap().into(),
+            iter.next().unwrap().into(),
+            iter.next().unwrap().into(),
+            iter.next().unwrap().into(),
         ])
     }
 }
@@ -150,7 +143,7 @@ pub fn p1(s: &str) -> String {
         .lines()
         .map(|line| {
             let (hand, bet) = line.split_once(' ').unwrap();
-            let hand = hand.chars().map(Card::from).collect::<Hand>();
+            let hand = hand.chars().collect::<Hand>();
             let score = hand.score_p1();
             let bet = bet.parse::<u32>().unwrap();
             (score, hand, bet)
@@ -166,11 +159,13 @@ pub fn p1(s: &str) -> String {
 }
 
 pub fn p2(s: &str) -> String {
+    use std::cmp::Ordering;
+
     let mut hands = s
         .lines()
         .map(|line| {
             let (hand, bet) = line.split_once(' ').unwrap();
-            let hand = hand.chars().map(Card::from).collect::<Hand>();
+            let hand = hand.chars().collect::<Hand>();
             let score = hand.score_p2();
             let bet = bet.parse::<u32>().unwrap();
             (score, hand, bet)
@@ -186,13 +181,13 @@ pub fn p2(s: &str) -> String {
         }
 
         //Otherwise sort by cards
-        for (a, b) in a.1.cards.iter().zip(b.1.cards.iter()) {
+        for (a, b) in a.1 .0.iter().zip(b.1 .0.iter()) {
             let ord = a.idx2().cmp(&b.idx2());
-            if ord != std::cmp::Ordering::Equal {
+            if ord != Ordering::Equal {
                 return ord;
             }
         }
-        std::cmp::Ordering::Equal
+        Ordering::Equal
     });
     hands
         .into_iter()

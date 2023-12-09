@@ -1,6 +1,7 @@
 #![feature(let_chains)]
 #![allow(dead_code)]
 #![feature(variant_count)]
+#![feature(iter_map_windows)]
 mod day1;
 mod day2;
 mod day3;
@@ -8,6 +9,8 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
+mod day9;
 
 use std::fs;
 
@@ -32,9 +35,9 @@ impl Solutions {
         (day6::p2, "inputs/6.txt"),
         (day7::p1, "inputs/7.txt"),
         (day7::p2, "inputs/7.txt"),
-        // (day8::p1, "inputs/8.txt"),
-        // (day8::p2, "inputs/8.txt"),
-        // (day9::p1, "inputs/9.txt"),
+        (day8::p1, "inputs/8.txt"),
+        (day8::p2, "inputs/8.txt"),
+        (day9::p1, "inputs/9.txt"),
         // (day9::p2, "inputs/9.txt"),
         // (day10::p1, "inputs/10.txt"),
         // (day10::p2, "inputs/10.txt"),
