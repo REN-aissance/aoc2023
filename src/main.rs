@@ -41,7 +41,7 @@ impl Solutions {
         (day9::p1, "inputs/9.txt"),
         (day9::p2, "inputs/9.txt"),
         (day10::p1, "inputs/10.txt"),
-        // (day10::p2, "inputs/10.txt"),
+        (day10::p2, "inputs/10.txt"),
         // (day11::p1, "inputs/11.txt"),
         // (day11::p2, "inputs/11.txt"),
         // (day12::p1, "inputs/12.txt"),
