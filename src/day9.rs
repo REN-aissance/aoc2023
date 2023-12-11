@@ -7,16 +7,13 @@ pub fn p1(s: &str) -> String {
                 .collect::<Vec<_>>();
             let mut endings = vec![];
             while !line.iter().rev().all(|e| e == &0) {
-                println!("{:?}", line);
                 endings.push(*line.last().unwrap());
                 line = line
                     .into_iter()
                     .map_windows(|&[a, b]| b - a)
                     .collect::<Vec<_>>();
             }
-            let e = endings.into_iter().sum::<i32>();
-            println!("{e}\n");
-            e
+            endings.into_iter().sum::<i32>()
         })
         .sum::<i32>()
         .to_string()
@@ -28,7 +25,7 @@ pub fn p2(s: &str) -> String {
             let mut line = line
                 .split_ascii_whitespace()
                 .map(|e| e.parse::<i32>().unwrap())
-                .collect::<Vec<_>>();
+                .collect::<Vec<i32>>();
             let mut starts = vec![];
             while !line.iter().rev().all(|e| e == &0) {
                 starts.push(*line.first().unwrap());
@@ -36,11 +33,8 @@ pub fn p2(s: &str) -> String {
                     .into_iter()
                     .map_windows(|&[a, b]| b - a)
                     .collect::<Vec<_>>();
-                println!("{:?}", line);
             }
-            let e = starts.into_iter().rev().reduce(|acc, e| e - acc).unwrap();
-            println!("{e}\n");
-            e
+            starts.into_iter().rev().reduce(|acc, e| e - acc).unwrap()
         })
         .sum::<i32>()
         .to_string()
