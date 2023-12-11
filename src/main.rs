@@ -2,8 +2,10 @@
 #![allow(dead_code)]
 #![feature(variant_count)]
 #![feature(iter_map_windows)]
+#![feature(iter_intersperse)]
 mod day1;
 mod day10;
+mod day11;
 mod day2;
 mod day3;
 mod day4;
@@ -42,7 +44,7 @@ impl Solutions {
         (day9::p2, "inputs/9.txt"),
         (day10::p1, "inputs/10.txt"),
         (day10::p2, "inputs/10.txt"),
-        // (day11::p1, "inputs/11.txt"),
+        (day11::p1, "inputs/11.txt"),
         // (day11::p2, "inputs/11.txt"),
         // (day12::p1, "inputs/12.txt"),
         // (day12::p2, "inputs/12.txt"),
