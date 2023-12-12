@@ -1,89 +1,107 @@
 use std::fmt::Display;
 
-struct Map(Vec<Vec<char>>);
+struct Map {
+    galaxies: Vec<(usize, usize)>,
+    width: usize,
+    height: usize,
+}
 
 impl Map {
-    fn add_blank_row(&mut self, i: usize) {
-        self.0.insert(i, vec!['.'; self.0[0].len()])
+    fn expand(&mut self, n: usize) {
+        self.expand_x(n);
+        self.expand_y(n);
     }
-    fn add_blank_column(&mut self, i: usize) {
-        self.0.iter_mut().for_each(|vec| vec.insert(i, '.'));
-    }
-    fn expand(&mut self) {
-        self.expand_x();
-        self.expand_y();
-    }
-    fn expand_y(&mut self) {
-        for i in (0..self.0.len()).rev() {
-            if self.0[i].iter().all(|c| c == &'.') {
-                self.add_blank_row(i);
+    fn expand_y(&mut self, n: usize) {
+        for y in (0..self.height).rev() {
+            if self.galaxies.iter().rev().all(|g| g.1 != y) {
+                self.galaxies.iter_mut().filter(|g| g.1 > y).for_each(|g| {
+                    g.1 += n - 1;
+                });
+                self.height += n - 1;
             }
         }
     }
-    fn expand_x(&mut self) {
-        for x in (0..self.0[0].len()).rev() {
-            let mut empty = true;
-            for y in (0..self.0.len()).rev() {
-                if self.0[y][x] == '#' {
-                    empty = false;
-                }
-            }
-            if empty {
-                self.add_blank_column(x)
+    fn expand_x(&mut self, n: usize) {
+        for x in (0..self.width).rev() {
+            if !self.galaxies.iter().any(|g| g.0 == x) {
+                self.galaxies.iter_mut().filter(|g| g.0 > x).for_each(|g| {
+                    g.0 += n - 1;
+                });
+                self.width += n - 1;
             }
         }
     }
-    fn get_galaxies(&self) -> Vec<(usize, usize)> {
-        let mut o = vec![];
-        for (y, row) in self.0.iter().enumerate() {
-            for (x, c) in row.iter().enumerate() {
-                if c == &'#' {
-                    o.push((x, y));
-                }
+    fn taxicab_sum(&self) -> usize {
+        let mut sum = 0;
+        for i in 0..(self.galaxies.len() - 1) {
+            for j in (i + 1)..self.galaxies.len() {
+                let g1 = self.galaxies[i];
+                let g2 = self.galaxies[j];
+                sum += Self::taxicab(g1, g2);
             }
         }
-        o
+        sum
+    }
+    fn taxicab(a: (usize, usize), b: (usize, usize)) -> usize {
+        (a.1.max(b.1) - a.1.min(b.1)) + (a.0.max(b.0) - a.0.min(b.0))
     }
 }
 
 impl From<&str> for Map {
     fn from(value: &str) -> Self {
-        Map(value.lines().map(|line| line.chars().collect()).collect())
+        let height = value.lines().count();
+        let width = value.lines().next().unwrap().chars().count();
+        let galaxies = value
+            .lines()
+            .enumerate()
+            .flat_map(|(y, line)| {
+                line.chars()
+                    .enumerate()
+                    .filter_map(move |(x, c)| if c == '#' { Some((x, y)) } else { None })
+            })
+            .collect();
+        Map {
+            galaxies,
+            height,
+            width,
+        }
     }
 }
 
 impl Display for Map {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0
-            .iter()
-            .map(|vec| writeln!(f, "{}", vec.iter().collect::<String>()))
-            .find(|e| e.is_err())
-            .unwrap_or(Ok(()))
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let c = if self.galaxies.contains(&(x, y)) {
+                    '#'
+                } else {
+                    '.'
+                };
+                write!(f, "{}", c)?;
+            }
+            writeln!(f)?;
+        }
+        writeln!(f)?;
+        Ok(())
     }
 }
 
 pub fn p1(s: &str) -> String {
     let mut map = Map::from(s);
-    println!("{}", map);
-    map.expand();
-    println!("{}", map);
-
-    let galaxies = map.get_galaxies();
-    let mut sum = 0;
-    for i in 0..galaxies.len() - 1 {
-        for j in i..galaxies.len() {
-            let g1 = galaxies[i];
-            let g2 = galaxies[j];
-            let taxicab = (g2.1.max(g1.1) - g2.1.min(g1.1)) + (g2.0.max(g1.0) - g2.0.min(g1.0));
-            sum += taxicab;
-        }
-    }
-
-    sum.to_string()
+    map.expand(2);
+    map.taxicab_sum().to_string()
 }
 
 pub fn p2(s: &str) -> String {
-    todo!()
+    let mut map = Map::from(s);
+    map.expand(1_000_000);
+    map.taxicab_sum().to_string()
+}
+
+pub fn test(s: &str, n: usize) -> String {
+    let mut map = Map::from(s);
+    map.expand(n);
+    map.taxicab_sum().to_string()
 }
 
 #[cfg(test)]
@@ -93,5 +111,17 @@ mod tests {
     fn test_p1() {
         let input = "...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....";
         assert_eq!(p1(input), 374.to_string());
+    }
+
+    #[test]
+    fn test_p2() {
+        let input = "...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....";
+        assert_eq!(test(input, 10), 1030.to_string());
+    }
+
+    #[test]
+    fn test_p2_2() {
+        let input = "...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....";
+        assert_eq!(test(input, 100), 8410.to_string());
     }
 }
