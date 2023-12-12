@@ -14,6 +14,7 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day12;
 
 use std::fs;
 
@@ -45,9 +46,9 @@ impl Solutions {
         (day10::p1, "inputs/10.txt"),
         (day10::p2, "inputs/10.txt"),
         (day11::p1, "inputs/11.txt"),
-        // (day11::p2, "inputs/11.txt"),
-        // (day12::p1, "inputs/12.txt"),
-        // (day12::p2, "inputs/12.txt"),
+        (day11::p2, "inputs/11.txt"),
+        (day12::p1, "inputs/12.txt"),
+        (day12::p2, "inputs/12.txt"),
         // (day13::p1, "inputs/13.txt"),
         // (day13::p2, "inputs/13.txt"),
         // (day14::p1, "inputs/14.txt"),
