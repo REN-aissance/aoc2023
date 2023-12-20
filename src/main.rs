@@ -6,6 +6,7 @@
 mod day1;
 mod day10;
 mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -14,9 +15,8 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
-mod day12;
 
-use std::fs;
+use std::{env, fs};
 
 type Solution = fn(&str) -> String;
 
@@ -89,5 +89,21 @@ impl Solutions {
 }
 
 pub fn main() {
-    Solutions::run_all();
+    if let Some(e) = env::args().nth(1)
+        && e.len() > 1
+    {
+        let (num, char): (usize, char) = (
+            e[0..(e.len() - 1)].parse().unwrap(),
+            e.chars().nth(e.len() - 1).unwrap(),
+        );
+        let o = match char {
+            'a' => 0,
+            'b' => 1,
+            _ => panic!("Please specify part 1 or 2 with arg n{{a|b}}"),
+        };
+        let (f, path) = Solutions::SOLUTIONS.0[(num - 1) * 2 + o];
+        println!("{}", f(&fs::read_to_string(path).unwrap()));
+    } else {
+        Solutions::run_all();
+    }
 }

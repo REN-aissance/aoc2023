@@ -8,6 +8,9 @@ edition = "2021"
 [dependencies]
 regex = "1.10.2"
 num = "0.4.1"
+ahash = "0.8.6"
+cached = "0.46.1"
+rayon = "1.8.0"
 onig = { version = "6.4.0", default-features = false }
 
 [profile.dev.package."*"]

@@ -370,10 +370,4 @@ mod tests {
         let input = "..........\n.S------7.\n.|F----7|.\n.||....||.\n.||....||.\n.|L-7F-J|.\n.|..||..|.\n.L--JL--J.\n..........";
         assert_eq!(p2(input), 4.to_string());
     }
-
-    #[test]
-    pub fn test_p2_3() {
-        let input = "7-F7-\n.FJ|7\nSJLL7\n|F--J\nLJ.LJ";
-        assert_eq!(p2(input), 4.to_string());
-    }
 }

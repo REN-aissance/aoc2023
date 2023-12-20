@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use ahash::AHasher;
+use cached::proc_macro::cached;
+use cached::SizedCache;
+use std::hash::{Hash, Hasher};
 
 pub fn p1(s: &str) -> String {
     s.trim()
@@ -30,25 +33,22 @@ pub fn p2(s: &str) -> String {
         .to_string()
 }
 
-fn valid_constructions(s: &[u8], nums: &[usize]) -> u64 {
-    let mut cache = HashMap::new();
-    valid_constructions_r(s, nums, &mut cache)
+fn hash(s: &[u8], nums: &[usize]) -> u64 {
+    let mut hasher = AHasher::default();
+    s.hash(&mut hasher);
+    nums.hash(&mut hasher);
+    hasher.finish()
 }
 
-fn valid_constructions_r<'a>(
-    s: &'a [u8],
-    nums: &'a [usize],
-    cache: &mut HashMap<(&'a [u8], &'a [usize]), u64>,
-) -> u64 {
-    if let Some(n) = cache.get(&(s, nums)) {
-        return *n;
-    }
-
+#[cached(
+    type = "SizedCache<u64, u64>",
+    create = "{SizedCache::with_size(10000)}",
+    convert = r#"{ hash(s, nums) }"#
+)]
+fn valid_constructions(s: &[u8], nums: &[usize]) -> u64 {
     if (s.is_empty() && !nums.is_empty()) || (nums.is_empty() && s.iter().any(|b| b == &b'#')) {
-        cache.insert((s, nums), 0);
         return 0;
     } else if nums.is_empty() {
-        cache.insert((s, nums), 1);
         return 1;
     }
 
@@ -60,23 +60,26 @@ fn valid_constructions_r<'a>(
             let next = s.get(num + i).copied().unwrap_or(b'.');
             if s.get(i..(i + num))
                 .map(|b| b.iter().all(|b| b != &b'.'))
-                .unwrap_or(false)
+                .unwrap_or_default()
                 && next != b'#'
             {
                 let s = s.get((num + i + 1)..).unwrap_or_default();
-                count += valid_constructions_r(s, &nums[1..], cache);
+                count += valid_constructions(s, &nums[1..]);
             }
         } else {
             break;
         }
     }
-
-    cache.insert((s, nums), count);
     count
 }
 
 #[cfg(test)]
 mod tests {
+    use std::{
+        fs,
+        time::{Duration, Instant},
+    };
+
     use super::*;
     #[test]
     fn test_p1() {
@@ -92,6 +95,27 @@ mod tests {
             )
         });
         assert_eq!(p1(input), combinations.iter().sum::<usize>().to_string());
+    }
+
+    #[ignore]
+    #[test]
+    fn bench_p2() {
+        let input = fs::read_to_string("inputs/12.txt").unwrap();
+        let mut times = vec![];
+        for _ in 0..10 {
+            let now = Instant::now();
+            println!("{}", p2(input.as_str()));
+            let elapsed = now.elapsed();
+            times.push(elapsed);
+        }
+        println!();
+        let count = times.len() as f32;
+        let avg = times
+            .into_iter()
+            .sum::<Duration>()
+            .div_f32(count)
+            .as_millis();
+        println!("{}ms", avg);
     }
 
     #[test]
