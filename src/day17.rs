@@ -102,7 +102,13 @@ impl Map {
         frontier.insert(State {
             cost: Some(0),
             pos: start,
-            dir: Dir::East, //dummy
+            dir: Dir::East,
+            repeats: 0,
+        });
+        frontier.insert(State {
+            cost: Some(0),
+            pos: start,
+            dir: Dir::South,
             repeats: 0,
         });
 
@@ -182,24 +188,24 @@ impl Map {
             cur = *prev;
         }
 
-        //Path printing
-        // for (y, v) in self.0.iter().enumerate() {
-        //     for (x, _) in v.iter().enumerate() {
-        //         let c = if let Some(key) = path.iter().find(|k| k.pos == (x, y)) {
-        //             match key.dir {
-        //                 Dir::North => '^',
-        //                 Dir::South => 'V',
-        //                 Dir::East => '>',
-        //                 Dir::West => '<',
-        //             }
-        //         } else {
-        //             '.'
-        //         };
-        //         print!("{}", c);
-        //     }
-        //     println!();
-        // }
-        // println!();
+        // Path printing
+        for (y, v) in self.0.iter().enumerate() {
+            for (x, _) in v.iter().enumerate() {
+                let c = if let Some(key) = path.iter().find(|k| k.pos == (x, y)) {
+                    match key.dir {
+                        Dir::North => '^',
+                        Dir::South => 'V',
+                        Dir::East => '>',
+                        Dir::West => '<',
+                    }
+                } else {
+                    '.'
+                };
+                print!("{}", c);
+            }
+            println!();
+        }
+        println!();
 
         shortest_path_len
     }
@@ -279,5 +285,11 @@ mod tests {
     fn test_p2_2() {
         let input = "111111111111\n999999999991\n999999999991\n999999999991\n999999999991";
         assert_eq!(p2(input), 71.to_string());
+    }
+
+    #[test]
+    fn test_p2_3() {
+        let input = "19999\n19999\n19999\n19999\n11111";
+        assert_eq!(p2(input), 8.to_string());
     }
 }
