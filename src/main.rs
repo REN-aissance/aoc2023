@@ -19,6 +19,8 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
+mod day17;
 mod template;
 
 use std::{env, fs};
@@ -60,10 +62,10 @@ impl Solutions {
         (day14::p2, "inputs/14.txt"),
         (day15::p1, "inputs/15.txt"),
         (day15::p2, "inputs/15.txt"),
-        // (day16::p1, "inputs/16.txt"),
-        // (day16::p2, "inputs/16.txt"),
-        // (day17::p1, "inputs/17.txt"),
-        // (day17::p2, "inputs/17.txt"),
+        (day16::p1, "inputs/16.txt"),
+        (day16::p2, "inputs/16.txt"),
+        (day17::p1, "inputs/17.txt"),
+        (day17::p2, "inputs/17.txt"),
         // (day18::p1, "inputs/18.txt"),
         // (day18::p2, "inputs/18.txt"),
         // (day19::p1, "inputs/19.txt"),

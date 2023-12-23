@@ -41,7 +41,7 @@ impl<'a> HashMap<'a> {
     }
 
     pub fn hash(s: &str) -> u8 {
-        s.chars().map(|c| c as u8).fold(0_u8, |mut acc, n| {
+        s.bytes().fold(0_u8, |mut acc, n| {
             acc = acc.wrapping_add(n);
             acc = acc.wrapping_mul(17);
             acc
