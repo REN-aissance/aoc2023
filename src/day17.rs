@@ -189,23 +189,23 @@ impl Map {
         }
 
         // Path printing
-        for (y, v) in self.0.iter().enumerate() {
-            for (x, _) in v.iter().enumerate() {
-                let c = if let Some(key) = path.iter().find(|k| k.pos == (x, y)) {
-                    match key.dir {
-                        Dir::North => '^',
-                        Dir::South => 'V',
-                        Dir::East => '>',
-                        Dir::West => '<',
-                    }
-                } else {
-                    '.'
-                };
-                print!("{}", c);
-            }
-            println!();
-        }
-        println!();
+        // for (y, v) in self.0.iter().enumerate() {
+        //     for (x, _) in v.iter().enumerate() {
+        //         let c = if let Some(key) = path.iter().find(|k| k.pos == (x, y)) {
+        //             match key.dir {
+        //                 Dir::North => '^',
+        //                 Dir::South => 'V',
+        //                 Dir::East => '>',
+        //                 Dir::West => '<',
+        //             }
+        //         } else {
+        //             '.'
+        //         };
+        //         print!("{}", c);
+        //     }
+        //     println!();
+        // }
+        // println!();
 
         shortest_path_len
     }
