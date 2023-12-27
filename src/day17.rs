@@ -37,6 +37,16 @@ struct State {
     repeats: u32,
 }
 
+impl State {
+    pub fn to_key(&self) -> Key {
+        Key {
+            pos: self.pos,
+            dir: self.dir,
+            repeats: self.repeats,
+        }
+    }
+}
+
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Hash)]
 struct Key {
     pos: (usize, usize),
@@ -71,6 +81,10 @@ impl Map {
         println!();
     }
 
+    pub fn taxicab(a: (usize, usize), b: (usize, usize)) -> u32 {
+        ((a.1.max(b.1) - a.1.min(b.1)) + (a.0.max(b.0) - a.0.min(b.0))) as u32
+    }
+
     fn modified_dijkstra(
         &self,
         start: (usize, usize),
@@ -83,34 +97,25 @@ impl Map {
         let mut end_key = None;
         let mut shortest_path_len = None;
 
-        distances.insert(
-            Key {
-                pos: start,
-                dir: Dir::South,
-                repeats: 0,
-            },
-            (Some(0), None),
-        );
-        distances.insert(
-            Key {
+        let starting_states = [
+            State {
+                cost: Some(0),
                 pos: start,
                 dir: Dir::East,
                 repeats: 0,
             },
-            (Some(0), None),
-        );
-        frontier.insert(State {
-            cost: Some(0),
-            pos: start,
-            dir: Dir::East,
-            repeats: 0,
-        });
-        frontier.insert(State {
-            cost: Some(0),
-            pos: start,
-            dir: Dir::South,
-            repeats: 0,
-        });
+            State {
+                cost: Some(0),
+                pos: start,
+                dir: Dir::South,
+                repeats: 0,
+            },
+        ];
+
+        for s in starting_states {
+            frontier.insert(s.clone());
+            distances.insert(s.to_key(), (s.cost, None));
+        }
 
         while let Some(State {
             cost,
@@ -153,27 +158,23 @@ impl Map {
                         {
                             let new_repeats = if dir == next_dir { repeats + 1 } else { 1 };
 
-                            let key = Key {
+                            let next_state = State {
                                 pos: new_pos,
                                 dir: next_dir,
+                                cost: Some(new_cost),
                                 repeats: new_repeats,
                             };
 
                             //New state is valid
                             if new_repeats <= max_steps
-                                && (!distances.contains_key(&key)
-                                    || distances[&key]
+                                && (!distances.contains_key(&next_state.to_key())
+                                    || distances[&next_state.to_key()]
                                         .0
                                         .is_some_and(|old_cost| new_cost < old_cost))
                             {
-                                let next_state = State {
-                                    pos: new_pos,
-                                    dir: next_dir,
-                                    cost: Some(new_cost),
-                                    repeats: new_repeats,
-                                };
-                                frontier.insert(next_state);
-                                distances.insert(key, (Some(new_cost), Some(old_key)));
+                                frontier.insert(next_state.clone());
+                                distances
+                                    .insert(next_state.to_key(), (Some(new_cost), Some(old_key)));
                             }
                         }
                     }

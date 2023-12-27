@@ -1,9 +1,9 @@
 pub fn p1(s: &str) -> String {
-    todo!()
+    0.to_string()
 }
 
 pub fn p2(s: &str) -> String {
-    todo!()
+    0.to_string()
 }
 
 #[cfg(test)]
