@@ -34,30 +34,16 @@ pub fn p1(s: &str) -> String {
         };
         let count = iter.next().unwrap().parse::<usize>().unwrap();
 
-        // let mut color = iter
-        //     .next()
-        //     .unwrap()
-        //     .chars()
-        //     .skip(2)
-        //     .take(6)
-        //     .map(|c| c.to_digit(16).unwrap() as u8);
-        //
-        // let color = (
-        //     color.next().unwrap() + color.next().unwrap(),
-        //     color.next().unwrap() + color.next().unwrap(),
-        //     color.next().unwrap() + color.next().unwrap(),
-        // );
-
         for _ in 0..count {
-            map.insert(cur /*, color*/);
+            map.insert(cur);
             cur = (cur.0 + dir.0, cur.1 + dir.1)
         }
     });
 
-    let x_min = map.iter/*keys*/().copied().min_by(|a, b| a.0.cmp(&b.0)).unwrap().0;
-    let x_max = map.iter/*keys*/().copied().max_by(|a, b| a.0.cmp(&b.0)).unwrap().0;
-    let y_min = map.iter/*keys*/().copied().min_by(|a, b| a.1.cmp(&b.1)).unwrap().1;
-    let y_max = map.iter/*keys*/().copied().max_by(|a, b| a.1.cmp(&b.1)).unwrap().1;
+    let x_min = map.iter().copied().min_by(|a, b| a.0.cmp(&b.0)).unwrap().0;
+    let x_max = map.iter().copied().max_by(|a, b| a.0.cmp(&b.0)).unwrap().0;
+    let y_min = map.iter().copied().min_by(|a, b| a.1.cmp(&b.1)).unwrap().1;
+    let y_max = map.iter().copied().max_by(|a, b| a.1.cmp(&b.1)).unwrap().1;
 
     //cast rays to count interior area
     let mut sum = 0;
@@ -67,16 +53,16 @@ pub fn p1(s: &str) -> String {
         let mut on_edge = false;
         let mut curve_from_below = false;
         for x in x_min..=x_max {
-            let is_boundary = map.contains/*_key*/(&(x, y));
+            let is_boundary = map.contains(&(x, y));
 
             //encountered boundary
             if !prev_is_boundary && is_boundary {
                 inside = !inside;
-                curve_from_below = map.contains/*_key*/(&(x, y + 1));
+                curve_from_below = map.contains(&(x, y + 1));
             }
             //stepped over a boundary
             if prev_is_boundary && !is_boundary {
-                if on_edge && curve_from_below == map.contains/*_key*/(&(x - 1, y + 1)) {
+                if on_edge && curve_from_below == map.contains(&(x - 1, y + 1)) {
                     inside = !inside;
                 }
                 on_edge = false;
@@ -91,7 +77,7 @@ pub fn p1(s: &str) -> String {
                 sum += 1;
             } else if inside {
                 sum += 1;
-                map.insert((x, y) /*, (0, 0, 0)*/);
+                map.insert((x, y));
             }
 
             prev_is_boundary = is_boundary;
@@ -100,7 +86,7 @@ pub fn p1(s: &str) -> String {
 
     for y in y_min..=y_max {
         for x in x_min..=x_max {
-            if map.contains/*_key*/(&(x, y)) {
+            if map.contains(&(x, y)) {
                 print!("#");
             } else {
                 print!(".");
