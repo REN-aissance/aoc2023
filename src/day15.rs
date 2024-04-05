@@ -65,8 +65,7 @@ impl<'a> HashMap<'a> {
 }
 
 pub fn p1(s: &str) -> String {
-    s.trim()
-        .split(',')
+    s.split(',')
         .map(HashMap::hash)
         .map(|n| n as u32)
         .sum::<u32>()

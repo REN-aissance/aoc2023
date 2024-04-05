@@ -38,7 +38,6 @@ impl From<&str> for Map {
         let height = value.lines().count();
         let width = value.lines().next().unwrap().len();
         let map = value
-            .trim()
             .lines()
             .flat_map(|line| line.chars().map(Cell::from))
             .collect::<Vec<_>>();

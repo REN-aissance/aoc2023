@@ -26,7 +26,6 @@ pub fn get_neighbors(cur: &Pos) -> impl Iterator<Item = Pos> + Clone + '_ {
 
 pub fn p1(input: &str) -> String {
     let mut map = input
-        .trim()
         .lines()
         .map(|line| line.chars().map(|c| Tile::from(c)).collect::<Vec<_>>())
         .collect::<Vec<Vec<_>>>();

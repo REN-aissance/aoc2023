@@ -1,6 +1,5 @@
 pub fn p1(s: &str) -> String {
-    s.trim_end()
-        .split("\n\n")
+    s.split("\n\n")
         .map(|mirror| {
             let mut o = 0;
             let w = mirror.lines().next().unwrap().len();
@@ -136,8 +135,7 @@ fn flat_vec_to_2d_transpose(w: usize, h: usize, mirror: Vec<char>) -> Vec<Vec<ch
 }
 
 pub fn p2(s: &str) -> String {
-    s.trim_end()
-        .split("\n\n")
+    s.split("\n\n")
         .map(|mirror| {
             let w = mirror.lines().next().unwrap().len();
             let h = mirror.lines().count();

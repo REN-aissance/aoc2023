@@ -4,8 +4,7 @@ use cached::SizedCache;
 use std::hash::{Hash, Hasher};
 
 pub fn p1(s: &str) -> String {
-    s.trim()
-        .lines()
+    s.lines()
         .map(|line| {
             let (s, nums) = line.split_once(' ').unwrap();
             let nums = nums
@@ -20,8 +19,7 @@ pub fn p1(s: &str) -> String {
 }
 
 pub fn p2(s: &str) -> String {
-    s.trim()
-        .lines()
+    s.lines()
         .map(|line| {
             let (s, nums) = line.split_once(' ').unwrap();
             let nums = nums.trim().split(',').map(|n| n.parse().unwrap());

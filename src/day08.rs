@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub fn p1(s: &str) -> String {
-    let mut s = s.trim_end().lines();
+    let mut s = s.lines();
     let instructions = s.next().unwrap().chars().map(|c| match c {
         'L' => 0,
         'R' => 1,
@@ -44,7 +44,7 @@ pub fn p1(s: &str) -> String {
 }
 
 pub fn p2(s: &str) -> String {
-    let mut s = s.trim_end().lines();
+    let mut s = s.lines();
     let instructions = s
         .next()
         .unwrap()

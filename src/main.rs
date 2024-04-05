@@ -43,6 +43,7 @@ fn main() {
     let args = Args::parse();
     let input = &fs::read_to_string(format!("inputs/{}.txt", args.day))
         .unwrap_or_else(|_| panic!("Input for {} not available", args.day));
+    let input = &input.trim_end();
     let o = match (args.day, args.part) {
         (1, 1) => day01::p1(input),
         (1, 2) => day01::p2(input),

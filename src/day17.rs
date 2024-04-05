@@ -59,7 +59,6 @@ struct Map(Vec<Vec<u32>>);
 impl From<&str> for Map {
     fn from(value: &str) -> Self {
         Map(value
-            .trim()
             .lines()
             .map(|line| line.chars().map(|c| c.to_digit(10).unwrap()).collect())
             .collect())
