@@ -23,95 +23,79 @@ mod day16;
 mod day17;
 mod day18;
 mod template;
+mod day21;
+mod day19;
+mod day20;
 
-use std::{env, fs};
+use std::fs;
+use clap::Parser;
 
-type Solution = fn(&str) -> String;
-
-#[derive(Default)]
-pub struct Solutions(&'static [(Solution, &'static str)]);
-
-impl Solutions {
-    const SOLUTIONS: Solutions = Solutions(&[
-        (day01::p1, "inputs/1.txt"),
-        (day01::p2, "inputs/1.txt"),
-        (day02::p1, "inputs/2.txt"),
-        (day02::p2, "inputs/2.txt"),
-        (day03::p1, "inputs/3.txt"),
-        (day03::p2, "inputs/3.txt"),
-        (day04::p1, "inputs/4.txt"),
-        (day04::p2, "inputs/4.txt"),
-        (day05::p1, "inputs/5.txt"),
-        (day05::p2, "inputs/5.txt"),
-        (day06::p1, "inputs/6.txt"),
-        (day06::p2, "inputs/6.txt"),
-        (day07::p1, "inputs/7.txt"),
-        (day07::p2, "inputs/7.txt"),
-        (day08::p1, "inputs/8.txt"),
-        (day08::p2, "inputs/8.txt"),
-        (day09::p1, "inputs/9.txt"),
-        (day09::p2, "inputs/9.txt"),
-        (day10::p1, "inputs/10.txt"),
-        (day10::p2, "inputs/10.txt"),
-        (day11::p1, "inputs/11.txt"),
-        (day11::p2, "inputs/11.txt"),
-        (day12::p1, "inputs/12.txt"),
-        (day12::p2, "inputs/12.txt"),
-        (day13::p1, "inputs/13.txt"),
-        (day13::p2, "inputs/13.txt"),
-        (day14::p1, "inputs/14.txt"),
-        (day14::p2, "inputs/14.txt"),
-        (day15::p1, "inputs/15.txt"),
-        (day15::p2, "inputs/15.txt"),
-        (day16::p1, "inputs/16.txt"),
-        (day16::p2, "inputs/16.txt"),
-        (day17::p1, "inputs/17.txt"),
-        (day17::p2, "inputs/17.txt"),
-        (day18::p1, "inputs/18.txt"),
-        (day18::p2, "inputs/18.txt"),
-        // (day19::p1, "inputs/19.txt"),
-        // (day19::p2, "inputs/19.txt"),
-        // (day20::p1, "inputs/20.txt"),
-        // (day20::p2, "inputs/20.txt"),
-        // (day21::p1, "inputs/21.txt"),
-        // (day21::p2, "inputs/21.txt"),
-        // (day22::p1, "inputs/22.txt"),
-        // (day22::p2, "inputs/22.txt"),
-        // (day23::p1, "inputs/23.txt"),
-        // (day23::p2, "inputs/23.txt"),
-        // (day24::p1, "inputs/24.txt"),
-        // (day24::p2, "inputs/24.txt"),
-        // (day25::p1, "inputs/25.txt"),
-        // (day25::p2, "inputs/25.txt"),
-    ]);
-
-    pub fn run_all() {
-        for (i, (f, path)) in Solutions::SOLUTIONS.0.iter().enumerate() {
-            let c = if i % 2 == 0 { "a" } else { "b" };
-            println!("{}{}: {}", (i / 2) + 1, c, f(&Solutions::get_input(path)));
-        }
-    }
-    pub fn get_input(path: &str) -> String {
-        fs::read_to_string(path).expect("failed to read input file")
-    }
+#[derive(Parser, Debug)]
+#[command(version, about)]
+struct Args {
+    #[arg(short, long)]
+    day: usize,
+    #[arg(short, long)]
+    part: usize,
 }
 
-pub fn main() {
-    if let Some(e) = env::args().nth(1)
-        && e.len() > 1
-    {
-        let (num, char): (usize, char) = (
-            e[0..(e.len() - 1)].parse().unwrap(),
-            e.chars().nth(e.len() - 1).unwrap(),
-        );
-        let o = match char {
-            'a' => 0,
-            'b' => 1,
-            _ => panic!("Please specify part 1 or 2 with arg n{{a|b}}"),
-        };
-        let (f, path) = Solutions::SOLUTIONS.0[(num - 1) * 2 + o];
-        println!("{}", f(&fs::read_to_string(path).unwrap()));
-    } else {
-        Solutions::run_all();
-    }
+fn main() {
+    let args = Args::parse();
+    let input = &fs::read_to_string(format!("inputs/{}.txt", args.day))
+        .unwrap_or_else(|_| panic!("Input for {} not available", args.day));
+    let o = match (args.day, args.part) {
+        (1, 1) => day01::p1(input),
+        (1, 2) => day01::p2(input),
+        (2, 1) => day02::p1(input),
+        (2, 2) => day02::p2(input),
+        (3, 1) => day03::p1(input),
+        (3, 2) => day03::p2(input),
+        (4, 1) => day04::p1(input),
+        (4, 2) => day04::p2(input),
+        (5, 1) => day05::p1(input),
+        (5, 2) => day05::p2(input),
+        (6, 1) => day06::p1(input),
+        (6, 2) => day06::p2(input),
+        (7, 1) => day07::p1(input),
+        (7, 2) => day07::p2(input),
+        (8, 1) => day08::p1(input),
+        (8, 2) => day08::p2(input),
+        (9, 1) => day09::p1(input),
+        (9, 2) => day09::p2(input),
+        (10, 1) => day10::p1(input),
+        (10, 2) => day10::p2(input),
+        (11, 1) => day11::p1(input),
+        (11, 2) => day11::p2(input),
+        (12, 1) => day12::p1(input),
+        (12, 2) => day12::p2(input),
+        (13, 1) => day13::p1(input),
+        (13, 2) => day13::p2(input),
+        (14, 1) => day14::p1(input),
+        (14, 2) => day14::p2(input),
+        (15, 1) => day15::p1(input),
+        (15, 2) => day15::p2(input),
+        (16, 1) => day16::p1(input),
+        (16, 2) => day16::p2(input),
+        (17, 1) => day17::p1(input),
+        (17, 2) => day17::p2(input),
+        (18, 1) => day18::p1(input),
+        (18, 2) => day18::p2(input),
+        (19, 1) => day19::p1(input),
+        (19, 2) => day19::p2(input),
+        (20, 1) => day20::p1(input),
+        (20, 2) => day20::p2(input),
+        (21, 1) => day21::p1(input),
+        (21, 2) => day21::p2(input),
+        (22, 1) => unimplemented!(),
+        (22, 2) => unimplemented!(),
+        (23, 1) => unimplemented!(),
+        (23, 2) => unimplemented!(),
+        (24, 1) => unimplemented!(),
+        (24, 2) => unimplemented!(),
+        (25, 1) => unimplemented!(),
+        (25, 2) => unimplemented!(),
+        _ => panic!("Please enter a valid puzzle input"),
+    };
+    println!("{}", o);
 }
+

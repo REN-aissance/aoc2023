@@ -9,9 +9,9 @@ edition = "2021"
 regex = "1.10.2"
 num = "0.4.1"
 ahash = "0.8.6"
-cached = "0.46.1"
+cached = "0.49.2"
 rayon = "1.8.0"
-onig = { version = "6.4.0", default-features = false }
+clap = { version = "4.5.2", features = ["derive"] }
 
 [profile.dev.package."*"]
 opt-level = 3
