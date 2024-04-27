@@ -22,13 +22,15 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
-mod template;
-mod day21;
 mod day19;
 mod day20;
+mod day21;
+mod day22;
+mod utils;
+mod template;
 
-use std::fs;
 use clap::Parser;
+use std::fs;
 
 #[derive(Parser, Debug)]
 #[command(version, about)]
@@ -37,12 +39,14 @@ struct Args {
     day: usize,
     #[arg(short, long)]
     part: usize,
+    #[arg(short, long)]
+    file: Option<String>,
 }
 
 fn main() {
     let args = Args::parse();
-    let input = &fs::read_to_string(format!("inputs/{}.txt", args.day))
-        .unwrap_or_else(|_| panic!("Input for {} not available", args.day));
+    let input = args.file.unwrap_or(format!("inputs/{}.txt", args.day));
+    let input = &fs::read_to_string(input).expect("Specified/default file not available");
     let input = &input.trim_end();
     let o = match (args.day, args.part) {
         (1, 1) => day01::p1(input),
@@ -87,8 +91,8 @@ fn main() {
         (20, 2) => day20::p2(input),
         (21, 1) => day21::p1(input),
         (21, 2) => day21::p2(input),
-        (22, 1) => unimplemented!(),
-        (22, 2) => unimplemented!(),
+        (22, 1) => day22::p1(input),
+        (22, 2) => day22::p2(input),
         (23, 1) => unimplemented!(),
         (23, 2) => unimplemented!(),
         (24, 1) => unimplemented!(),
@@ -99,4 +103,3 @@ fn main() {
     };
     println!("{}", o);
 }
-

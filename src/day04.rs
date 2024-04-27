@@ -1,7 +1,6 @@
-use std::{
-    collections::{HashSet, VecDeque},
-    u32,
-};
+use std::
+    collections::{HashSet, VecDeque}
+;
 
 pub fn p1(input: &str) -> String {
     input

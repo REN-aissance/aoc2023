@@ -1,8 +1,8 @@
-pub fn p1(s: &str) -> String {
+pub fn p1(_s: &str) -> String {
     0.to_string()
 }
 
-pub fn p2(s: &str) -> String {
+pub fn p2(_s: &str) -> String {
     0.to_string()
 }
 

@@ -162,7 +162,7 @@ pub fn p2(s: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::time::Instant;
+    // use std::time::Instant;
 
     use super::*;
 
