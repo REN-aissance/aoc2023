@@ -98,15 +98,16 @@ pub fn p2(s: &str) -> String {
     map.taxicab_sum().to_string()
 }
 
-pub fn test(s: &str, n: usize) -> String {
-    let mut map = Map::from(s);
-    map.expand(n);
-    map.taxicab_sum().to_string()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    pub fn test(s: &str, n: usize) -> String {
+        let mut map = Map::from(s);
+        map.expand(n);
+        map.taxicab_sum().to_string()
+    }
+
     #[test]
     fn test_p1() {
         let input = "...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....";

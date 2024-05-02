@@ -1,5 +1,4 @@
 #![feature(let_chains)]
-#![allow(dead_code)]
 #![feature(variant_count)]
 #![feature(iter_map_windows)]
 #![feature(iter_intersperse)]

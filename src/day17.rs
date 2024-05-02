@@ -70,20 +70,6 @@ impl Map {
         self.0.get(pos.1)?.get(pos.0).copied()
     }
 
-    fn print(&self) {
-        self.0.iter().for_each(|v| {
-            v.iter().for_each(|n| {
-                print!("{}", (*n as u8 + b'0') as char);
-            });
-            println!();
-        });
-        println!();
-    }
-
-    pub fn taxicab(a: (usize, usize), b: (usize, usize)) -> u32 {
-        ((a.1.max(b.1) - a.1.min(b.1)) + (a.0.max(b.0) - a.0.min(b.0))) as u32
-    }
-
     fn modified_dijkstra(
         &self,
         start: (usize, usize),

@@ -43,16 +43,6 @@ impl Dir {
         };
         ((pos.0 as i32 + o.0) as usize, (pos.1 as i32 + o.1) as usize)
     }
-    fn connects(a: [Dir; 2], b: [Dir; 2]) -> bool {
-        for dir1 in a {
-            for dir2 in b {
-                if dir1 == dir2.opposite() {
-                    return true;
-                }
-            }
-        }
-        false
-    }
 }
 
 #[derive(Eq, PartialEq, Copy, Clone)]

@@ -1,7 +1,4 @@
-use std::{
-    collections::HashSet,
-    ops::{Div, RangeInclusive},
-};
+use std::collections::HashSet;
 
 //This approach isn't great I found. But I'm going to leave it this way to
 //preserve the technique. I think It's a decent algorithm (for some other purpose)
@@ -88,24 +85,6 @@ pub fn p1(s: &str) -> String {
     sum.to_string()
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-struct Line {
-    x: Num,
-    y_range: RangeInclusive<Num>,
-}
-
-impl Ord for Line {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.x.cmp(&other.x)
-    }
-}
-
-impl PartialOrd for Line {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
 type Num = i64;
 
 //Vaguely knew about Pick's Theorem. First time using it
@@ -152,7 +131,7 @@ pub fn p2(s: &str) -> String {
         .map_windows(|&[a, b, c, d]| (a * d) - (b * c))
         .step_by(2)
         .sum::<Num>()
-        .div(2);
+        / 2;
 
     //Rearranged Pick's Theorem
     let interior_points = area - exterior_points / 2 + 1;

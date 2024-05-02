@@ -29,19 +29,17 @@ impl From<char> for Cell {
 #[derive(Clone)]
 struct Map {
     map: Vec<Cell>,
-    height: usize,
     width: usize,
 }
 
 impl From<&str> for Map {
     fn from(value: &str) -> Self {
-        let height = value.lines().count();
         let width = value.lines().next().unwrap().len();
         let map = value
             .lines()
             .flat_map(|line| line.chars().map(Cell::from))
             .collect::<Vec<_>>();
-        Map { map, height, width }
+        Map { map, width }
     }
 }
 
@@ -130,20 +128,6 @@ impl Map {
                 }
             }
         }
-    }
-
-    pub fn print(&self) {
-        self.map.iter().enumerate().for_each(|(i, c)| {
-            if i % self.width == 0 {
-                println!();
-            }
-            let c = match c.visited {
-                true => '#',
-                false => c.char,
-            };
-            print!("{}", c);
-        });
-        println!();
     }
 }
 

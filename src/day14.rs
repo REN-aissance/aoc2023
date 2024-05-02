@@ -84,16 +84,6 @@ impl Map {
         }
     }
 
-    pub fn print(&self) {
-        self.map.iter().enumerate().for_each(|(i, c)| {
-            if i % self.width == 0 {
-                println!();
-            }
-            print!("{}", c);
-        });
-        println!();
-    }
-
     pub fn score(&self) -> usize {
         self.map
             .iter()

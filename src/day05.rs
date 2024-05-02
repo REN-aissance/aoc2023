@@ -1,5 +1,5 @@
 //Insanely high difficulty level compared to previous years. This is day 5????
-
+//What was I doing with all these generics???
 use num::CheckedSub;
 
 #[derive(Debug)]
@@ -33,6 +33,7 @@ where
         + CheckedSub
         + Copy,
 {
+    #[cfg(test)]
     fn new(dest: T, source: T, len: T) -> Self {
         Map { dest, source, len }
     }

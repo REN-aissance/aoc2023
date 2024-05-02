@@ -1,8 +1,8 @@
-pub fn p1(_s: &str) -> String {
+pub fn _p1(_s: &str) -> String {
     0.to_string()
 }
 
-pub fn p2(_s: &str) -> String {
+pub fn _p2(_s: &str) -> String {
     0.to_string()
 }
 
@@ -13,12 +13,12 @@ mod tests {
     #[test]
     fn test_p1() {
         let input = "";
-        assert_eq!(p1(input), 0.to_string());
+        assert_eq!(_p1(input), 0.to_string());
     }
 
     #[test]
     fn test_p2() {
         let input = "";
-        assert_eq!(p2(input), 0.to_string());
+        assert_eq!(_p2(input), 0.to_string());
     }
 }

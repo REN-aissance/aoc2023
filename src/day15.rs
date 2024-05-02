@@ -47,21 +47,6 @@ impl<'a> HashMap<'a> {
             acc
         })
     }
-
-    pub fn print(&self) {
-        self.0
-            .iter()
-            .enumerate()
-            .filter(|(_, list)| !list.is_empty())
-            .for_each(|(i, list)| {
-                print!("{}: ", i);
-                list.iter()
-                    .map(|e| e.to_string())
-                    .intersperse(", ".to_string())
-                    .for_each(|e| print!("{}", e));
-                println!();
-            })
-    }
 }
 
 pub fn p1(s: &str) -> String {
