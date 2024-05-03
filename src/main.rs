@@ -25,8 +25,9 @@ mod day19;
 mod day20;
 mod day21;
 mod day22;
-mod utils;
 mod template;
+mod utils;
+mod day23;
 
 use clap::Parser;
 use std::fs;
@@ -92,8 +93,8 @@ fn main() {
         (21, 2) => day21::p2(input),
         (22, 1) => day22::p1(input),
         (22, 2) => day22::p2(input),
-        (23, 1) => unimplemented!(),
-        (23, 2) => unimplemented!(),
+        (23, 1) => day23::p1(input),
+        (23, 2) => day23::p2(input),
         (24, 1) => unimplemented!(),
         (24, 2) => unimplemented!(),
         (25, 1) => unimplemented!(),
