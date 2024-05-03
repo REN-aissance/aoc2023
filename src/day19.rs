@@ -1,14 +1,7 @@
+use crate::utils::range::Range;
 use ahash::HashMap;
-use lazy_static::lazy_static;
 use ranges::{GenericRange, Ranges};
 use regex::Regex;
-use std::ops::{Bound::*, RangeBounds};
-
-lazy_static! {
-    static ref FALLBACK_RE: Regex = Regex::new(r",(\w+)}").unwrap();
-    static ref WORKFLOW_RE: Regex = Regex::new(r"([xmas])([<>])(\d+):(\w+)").unwrap();
-    static ref PART_RE: Regex = Regex::new(r"\d+").unwrap();
-}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Test {
@@ -95,8 +88,11 @@ struct Workflow {
 }
 impl From<&str> for Workflow {
     fn from(value: &str) -> Self {
-        let fallback = FALLBACK_RE.captures_iter(value).next().unwrap()[1].to_string();
-        let conditions = WORKFLOW_RE
+        let fallback_re = Regex::new(r",(\w+)}").unwrap();
+        let workflow_re = Regex::new(r"([xmas])([<>])(\d+):(\w+)").unwrap();
+
+        let fallback = fallback_re.captures_iter(value).next().unwrap()[1].to_string();
+        let conditions = workflow_re
             .captures_iter(value)
             .map(|cap| Condition {
                 label: cap[1].into(),
@@ -143,7 +139,8 @@ impl Workflow {
 struct Part(Vec<usize>);
 impl From<&str> for Part {
     fn from(value: &str) -> Self {
-        let values = PART_RE
+        let part_re = Regex::new(r"\d+").unwrap();
+        let values = part_re
             .find_iter(value)
             .map(|f| f.as_str().parse().unwrap())
             .collect::<Vec<_>>();
@@ -173,10 +170,7 @@ impl Default for PartRange {
 }
 impl PartRange {
     fn score(&self) -> u64 {
-        self.0
-            .iter()
-            .map(|ranges| ranges.as_ref().iter().cloned().map(span).sum::<usize>() as u64)
-            .product()
+        self.0.iter().map(|range| range.span() as u64).product()
     }
     fn get(&mut self, label: Label) -> &mut Ranges<usize> {
         match label {
@@ -188,28 +182,7 @@ impl PartRange {
     }
 }
 
-//The ranges crate is pretty cool but having to do this is kind of annoying, especially for such a
-//simple type
-fn span(range: GenericRange<usize>) -> usize {
-    let start = match range.start_bound() {
-        Included(&n) => n,
-        Excluded(&n) => n + 1,
-        _ => panic!(),
-    };
-    let end = match range.end_bound() {
-        Included(&n) => n + 1,
-        Excluded(&n) => n,
-        _ => panic!(),
-    };
-    end - start
-}
-
-fn prep_input(
-    s: &str,
-) -> (
-    Vec<Part>,
-    std::collections::HashMap<&str, Workflow, ahash::RandomState>,
-) {
+fn prep_input(s: &str) -> (Vec<Part>, HashMap<&str, Workflow>) {
     let (workflows, parts) = s.split_once("\n\n").unwrap();
     let parts: Vec<Part> = parts.lines().map(Part::from).collect();
     let workflows = workflows

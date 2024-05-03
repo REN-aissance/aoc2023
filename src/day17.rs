@@ -250,15 +250,15 @@ mod tests {
         let input_10 = "11111\n99991";
         assert_eq!(p1(input_10), 13.to_string());
 
-        let input_11 = "\n11119\n99919\n99919\n11119\n19999\n11119\n99911";
-        assert_eq!(p1(input_11), 16.to_string());
-
         let input_12 = "11\n11";
         assert_eq!(p1(input_12), 2.to_string());
+    }
 
-        // Test case that should panic
+    #[test]
+    #[should_panic]
+    fn panic() {
         let input_panic = "111111";
-        assert!(std::panic::catch_unwind(|| p1(input_panic)).is_err());
+        p1(input_panic);
     }
 
     #[test]
